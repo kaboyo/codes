@@ -1,3 +1,4 @@
+sinteractive --partition=scavenger--cpus-per-task=20 --mem=8000 --time=01:03:04
 #How to create an env from the previous one (cloning)
 #consider you ran a previous env
 ```
@@ -5,6 +6,8 @@ conda activate env
 ```
 #export the env
 ```
+
+
 conda env export > snakemake_amplicon.yml 
 conda env create -f snakemake_amplicon.yml 
 ```
@@ -59,4 +62,3 @@ conda env create -f workflow/envs/snakemake_env.yml
 ```
 ./dadasnake -l -n "TESTRUN" -r config/config.test.yaml
 ```
-

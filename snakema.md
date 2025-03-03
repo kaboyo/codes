@@ -531,7 +531,7 @@ https://github.com/a-h-b/dadasnake : dadasnake
 
 ```
 #
-https://www.youtube.com/embed/_wUGzqEjg6A
+
 
 consider you ran a previous env
 conda activate env

@@ -1,5 +1,42 @@
-#!/bin/bash
+#brief guide https://www.youtube.com/embed/_wUGzqEjg6A
+import os
+import glob
 
+SRA,FRR = globe_wildcards (rawReads/(sra)_[frr].fastq.gz)
+
+rule all:
+    input: 
+        expand("rawQC/{sra}_{frr}_fastqc.{extension}", sra=SRA)
+
+     # TODO: add your rules for other steps here
+rule rawFastqc:
+    input:  
+        rawReads="rawReads/(sra)_[frr].fastq.gz"
+        output:
+            zip="rawFastqc/ {sra}_{ffr}_fastqc.zip",
+            html="rawFastqc/{sra}_{frr}_fastqc_report.html"
+            threads:
+                shell:
+                """
+                fastqc -o results/fastqc -t {threads} {input}
+                """
+
+    rule trimmomaticd:
+    input:
+        rawReads = "rawReads/(sra)_[frr].fastq.gz",
+        output: f"{TRIMMED_DIR}/{sample}_R1_trimmed.fastq",
+            threads: 
+                shell: 
+                """
+                java -jar /path/to/Trimmomatic-0.39.jar PE -threads {threads} -phred33 {input.fq1} {input.fq2} {output.trimmed_fq1} {output.unpaired_fq1} {output.trimmed_fq2} {output.unpaired_fq2} ILLUMINACLIP:/path/to/adapters/TruSeq3-PE-2.fa:2:30:10 LEADING:3 TRAILING:3 SLIDINGWINDOW:4:15 MINLEN:36
+                """
+    rule cutadapter:
+        input:
+            f"{TRIMMED_DIR}/{sample}_R1_trimmed.fastq",
+            f"{TRIMMED_DIR}/{sample}_R2_trimmed.fastq
+        f"{FRR}
+        "fastqc {input} -o results/fastqc"
+     expand(f"{TRIMMED_DIR}/{sample}_R1_trimmed.fastq.gz", sample=SAMPLES)    
 # Example Snakefile for 16S Amplicon Sequencing Pipeline
 
 # Define input/output files
