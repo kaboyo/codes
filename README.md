@@ -1,4 +1,20 @@
-# codes
+
+
+#How to create an env from the previous one (cloning)
+#consider you ran a previous env
+```
+conda activate env
+
+#export the env
+```
+conda env export > snakemake_amplicon.yml 
+conda env create -f snakemake_amplicon.yml 
+```
+or clone  an env and rename it
+```
+conda create --name snakemake --clone snakemake_amplicons_workflow
+```
+
 #the code for snakemake_amplicons
 Link: https://github.com/a-h-b/dadasnake 
 
