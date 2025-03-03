@@ -2,7 +2,7 @@
 #consider you ran a previous env
 ```
 conda activate env
-
+```
 #export the env
 ```
 conda env export > snakemake_amplicon.yml 
@@ -20,9 +20,9 @@ Link: https://github.com/a-h-b/dadasnake
 dadasnake is a Snakemake workflow to process amplicon sequencing data, from raw fastq-files to taxonomically assigned "OTU" tables, based on the DADA2 method. Running dadasnake could not be easier: it is called by a single command from the command line. With a human-readable configuration file and a simple sample table, its steps are adjustable to a wide array of input data and requirements. It is designed to run on a computing cluster using a single conda environment in multiple jobs triggered by Snakemake. dadasnake reports on intermediary steps and statistics in intuitive figures and tables. Final data output formats include biom format, phyloseq objects, and flexible text files or R data sets for easy integration in microbial ecology analysis scripts.
 
 
+```
 #Installing dadasnake
 
-```
 #For dadasnake to work, you need conda.
 #Clone this repository to your disk:
 git clone https://github.com/a-h-b/dadasnake.git
