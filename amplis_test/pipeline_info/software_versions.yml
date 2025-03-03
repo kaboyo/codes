@@ -1,0 +1,7 @@
+FORMAT_TAXONOMY:
+  bash: 3.2.57
+RENAME_RAW_DATA_FILES:
+  sed: 4.7
+Workflow:
+    nf-core/ampliseq: v2.12.0-g8f139ce
+    Nextflow: 24.10.4

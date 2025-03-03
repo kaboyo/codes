@@ -1,0 +1,10 @@
+[2025-02-24 15:51:28,767] multiqc.config                                     [INFO   ]  Loading config settings from: multiqc_config.yml
+[2025-02-24 15:51:28,836] multiqc.core.version_check                         [WARNING]  MultiQC Version v1.27 now available!
+[2025-02-24 15:51:28,836] multiqc.core.file_search                           [INFO   ]  Search path: /mainfs/scratch/eo2r24/nexflow/PRJNA358488/work/b9/9c44c0b653f2efece3e964457adea3
+[2025-02-24 15:51:29,248] multiqc.modules.custom_content.custom_content      [WARNING]  HTML plot type found with more than one dataset in nf-core-ampliseq-summary
+[2025-02-24 15:51:29,248] multiqc.modules.custom_content.custom_content      [INFO   ]  nf-core-ampliseq-summary: Found 1 sample (html)
+[2025-02-24 15:51:29,248] multiqc.modules.custom_content.custom_content      [WARNING]  HTML plot type found with more than one dataset in nf-core-ampliseq-methods-description
+[2025-02-24 15:51:29,248] multiqc.modules.custom_content.custom_content      [INFO   ]  nf-core-ampliseq-methods-description: Found 1 sample (html)
+[2025-02-24 15:51:29,294] multiqc.modules.cutadapt.cutadapt                  [INFO   ]  Found 4 reports
+[2025-02-24 15:51:29,454] multiqc.modules.fastqc.fastqc                      [INFO   ]  Found 8 reports
+[2025-02-24 15:51:29,578] multiqc.core.write_results                         [INFO   ]  Rendering plots. Export plots to formats png, svg, pdf is requested, so it might take a while. To disable plot export, set `export_plots: false` in config, or remove the `--export-plots` command line flag

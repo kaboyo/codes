@@ -1,0 +1,13 @@
+Module	Section	Sample Name	Source
+Cutadapt	all_sections	sampleID_1	/mainfs/scratch/eo2r24/nexflow/PRJNA358488/work/b9/9c44c0b653f2efece3e964457adea3/6/sampleID_1.trimmed.cutadapt.log
+Cutadapt	all_sections	sampleID_2	/mainfs/scratch/eo2r24/nexflow/PRJNA358488/work/b9/9c44c0b653f2efece3e964457adea3/3/sampleID_2.trimmed.cutadapt.log
+Cutadapt	all_sections	sampleID_2a	/mainfs/scratch/eo2r24/nexflow/PRJNA358488/work/b9/9c44c0b653f2efece3e964457adea3/5/sampleID_2a.trimmed.cutadapt.log
+Cutadapt	all_sections	sampleID_1a	/mainfs/scratch/eo2r24/nexflow/PRJNA358488/work/b9/9c44c0b653f2efece3e964457adea3/4/sampleID_1a.trimmed.cutadapt.log
+FastQC	all_sections	sampleID_1a_1	/mainfs/scratch/eo2r24/nexflow/PRJNA358488/work/b9/9c44c0b653f2efece3e964457adea3/7/sampleID_1a_1_fastqc.zip
+FastQC	all_sections	sampleID_1_1	/mainfs/scratch/eo2r24/nexflow/PRJNA358488/work/b9/9c44c0b653f2efece3e964457adea3/11/sampleID_1_1_fastqc.zip
+FastQC	all_sections	sampleID_2_2	/mainfs/scratch/eo2r24/nexflow/PRJNA358488/work/b9/9c44c0b653f2efece3e964457adea3/14/sampleID_2_2_fastqc.zip
+FastQC	all_sections	sampleID_2_1	/mainfs/scratch/eo2r24/nexflow/PRJNA358488/work/b9/9c44c0b653f2efece3e964457adea3/13/sampleID_2_1_fastqc.zip
+FastQC	all_sections	sampleID_2a_1	/mainfs/scratch/eo2r24/nexflow/PRJNA358488/work/b9/9c44c0b653f2efece3e964457adea3/9/sampleID_2a_1_fastqc.zip
+FastQC	all_sections	sampleID_1_2	/mainfs/scratch/eo2r24/nexflow/PRJNA358488/work/b9/9c44c0b653f2efece3e964457adea3/12/sampleID_1_2_fastqc.zip
+FastQC	all_sections	sampleID_2a_2	/mainfs/scratch/eo2r24/nexflow/PRJNA358488/work/b9/9c44c0b653f2efece3e964457adea3/10/sampleID_2a_2_fastqc.zip
+FastQC	all_sections	sampleID_1a_2	/mainfs/scratch/eo2r24/nexflow/PRJNA358488/work/b9/9c44c0b653f2efece3e964457adea3/8/sampleID_1a_2_fastqc.zip
