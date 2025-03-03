@@ -1,5 +1,3 @@
-
-
 #How to create an env from the previous one (cloning)
 #consider you ran a previous env
 ```
