@@ -43,7 +43,10 @@ conda install -c conda-forge -c bioconda biopython muscle clustalo tabulate
 conda install -c conda-forge deicode
 pip install empress
 qiime dev refresh-cache
-conda install -c bioconda bioconductor-msa bioconductor-odseq
+conda install -c bioconda bioconductor-msa bioconductor-odseqfast
+
+
+
 ```
 #set up
 #If this is your first time running Tourmaline, you'll need to set up your directory. Simplified instructions are below, but see the Wiki's Setup page for complete instructions.
@@ -531,7 +534,7 @@ https://github.com/a-h-b/dadasnake : dadasnake
 
 ```
 #
-
+https://www.youtube.com/embed/_wUGzqEjg6A
 
 consider you ran a previous env
 conda activate env
@@ -560,3 +563,169 @@ git add .
 ```
 
 
+
+
+
+
+
+
+################################
+
+import glob
+
+# Get list of raw read files
+SAMPLES = glob_wildcards("rawReads/{sample}.fastq.gz")[0]
+
+rule all:
+    input:
+        expand("QC/{sample}_fastqc.html", sample=SAMPLES),
+        expand("trimmed/{sample}_trimmed.fastq.gz", sample=SAMPLES),
+        expand("filtered/{sample}_filtered.fastq.gz", sample=SAMPLES),
+        "dada2/feature_table.qza",
+        "dada2/rep_seqs.qza"
+
+# Step 1: Quality Control (FastQC)
+rule fastqc:
+    input:
+        "rawReads/{sample}.fastq.gz"
+    output:
+        "QC/{sample}_fastqc.html",
+        "QC/{sample}_fastqc.zip"
+    threads: 2
+    params:
+        outdir="QC/"
+    shell:
+        "fastqc {input} --threads {threads} -o {params.outdir}"
+
+# Step 2: Adapter Trimming (Cutadapt)
+rule cutadapt:
+    input:
+        "rawReads/{sample}.fastq.gz"
+    output:
+        "trimmed/{sample}_trimmed.fastq.gz"
+    threads: 4
+    params:
+        adapter="AGATCGGAAGAGCACACGTCTGAACTCCAGTCAC",
+        log="trimmed/{sample}_cutadapt.log"
+    shell:
+        "cutadapt -a {params.adapter} -o {output} {input} > {params.log} 2>&1"
+
+# Step 3: Quality Filtering (VSEARCH)
+rule vsearch_filter:
+    input:
+        "trimmed/{sample}_trimmed.fastq.gz"
+    output:
+        "filtered/{sample}_filtered.fastq.gz"
+    threads: 4
+    params:
+        maxee=1.0,  # Max expected error
+        minlen=100   # Min read length
+    shell:
+        "vsearch --fastq_filter {input} --fastq_maxee {params.maxee} --fastq_minlen {params.minlen} --fastaout {output}"
+
+# Step 4: Denoising with DADA2 (R Script Execution)
+rule dada2:
+    input:
+        expand("filtered/{sample}_filtered.fastq.gz", sample=SAMPLES)
+    output:
+        "dada2/feature_table.qza",
+        "dada2/rep_seqs.qza"
+    params:
+        script="scripts/dada2_pipeline.R"
+    shell:
+        "Rscript {params.script}"
+
+# Step 5: Taxonomic Classification (Optional, using QIIME2 or Kraken2)
+rule classify:
+    input:
+        "dada2/rep_seqs.qza"
+    output:
+        "taxonomy/taxonomy.qza"
+    params:
+        classifier="classifiers/silva-138.qza"
+    shell:
+        "qiime feature-classifier classify-sklearn --i-classifier {params.classifier} --i-reads {input} --o-classification {output}"
+################################
+
+
+
+
+################################
+
+
+conda init
+source activate 
+conda activate env
+```
+#export the env
+```
+#install miniconda
+```
+curl -O https://repo.anaconda.com/miniconda/Miniconda3-latest-MacOSX-x86_64.sh
+bash Miniconda3-latest-MacOSX-x86_64.sh
+conda --version
+
+```
+conda env export > snakemake_amplicon.yml 
+conda env create -f snakemake_amplicon.yml 
+```
+or clone  an env and rename it
+```
+conda create --name snakemake --clone snakemake_amplicons_workflow
+```
+
+#the code for snakemake_amplicons
+Link: https://github.com/a-h-b/dadasnake 
+
+#Tutorial
+dadasnake is a Snakemake workflow to process amplicon sequencing data, from raw fastq-files to taxonomically assigned "OTU" tables, based on the DADA2 method. Running dadasnake could not be easier: it is called by a single command from the command line. With a human-readable configuration file and a simple sample table, its steps are adjustable to a wide array of input data and requirements. It is designed to run on a computing cluster using a single conda environment in multiple jobs triggered by Snakemake. dadasnake reports on intermediary steps and statistics in intuitive figures and tables. Final data output formats include biom format, phyloseq objects, and flexible text files or R data sets for easy integration in microbial ecology analysis scripts.
+
+
+```
+#Installing dadasnake
+
+#For dadasnake to work, you need conda.
+#Clone this repository to your disk:
+git clone https://github.com/a-h-b/dadasnake.git
+
+#Change into the dadasnake directory:
+cd dadasnake
+```
+
+#if you want to submit the process running snakemake to the cluster:
+```
+cp auxiliary_files/dadasnake_allSubmit dadasnake
+chmod 755 dadasnake
+```
+
+#if you want to keep the process running snakemake on the frontend using tmux:
+
+```
+cp auxiliary_files/dadasnake_tmux dadasnake
+chmod 755 dadasnake
+```
+#Alternatively, if the above does not work, you can install a fixed snakemake version without mamba like so:
+```
+conda env create -f workflow/envs/snakemake_env.yml 
+```
+
+#initialize conda environments: This run sets up the conda environments that will be usable by all users
+```
+./dadasnake -i config/config.init.yaml 
+```
+
+
+#Optional test run: The test run does not need any databases. You should be able to start it by running
+
+```
+./dadasnake -l -n "TESTRUN" -r config/config.test.yaml
+```
+
+```
+python prepare_sample_table.py /path/to/raw_reads
+```
+
+
+
+/scratch/eo2r24/SNAKEMAKE/tourmaline/00-data/fastq/ 
+################################

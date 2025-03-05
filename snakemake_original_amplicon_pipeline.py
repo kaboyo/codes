@@ -22,7 +22,7 @@ rule rawFastqc:
                     
                 shell:
                 """
-                fastq {input.rawread} --threads {threads}  -o {params.path}
+                fastqc{input.rawread} --threads {threads}  -o {params.path}
                 """
 
     rule trimmomaticd:

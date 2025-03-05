@@ -1,60 +1,135 @@
 import os
-import glob
+import snakemake
 
-SRA, FRR = glob_wildcards("rawReads/{sra}_{frr}.fastq.gz")
+# Define input data directory
+RAW_READS = "data/raw_reads"
+TRIMMED_READS = "data/trimmed_reads"
+DENOISED_READS = "data/denoised_reads"
+TAXONOMY = "data/taxonomy"
 
 rule all:
-    input: 
-        expand("rawQC/{sra}_{frr}_fastqc.{extension}", sra=SRA, frr=FRR, extension=["html", "zip"])
+    input:
+        expand("results/otu_table_{{sample}}.qza", sample=glob_wildcards(os.path.join(RAW_READS, "SRR*.fq.gz")).sample),
+        expand("results/taxonomy_{{sample}}.tsv", sample=glob_wildcards(os.path.join(RAW_READS, "SRR*.fq.gz")).sample)
 
-rule rawFastqc:
-    input:  
-        rawReads="rawReads/{sra}_{frr}.fastq.gz"
+rule fastqc:
+    input:
+        raw_reads = os.path.join(RAW_READS, "{sample}.fq.gz")
     output:
-        zip="rawFastqc/{sra}_{frr}_fastqc.zip",
-        html="rawFastqc/{sra}_{frr}_fastqc_report.html"
-    threads: 2
-    params:
-        path="rawFastqc/"
+        qc_report = os.path.join("results/qc", "{sample}_fastqc.html")
     shell:
-        """
-        fastqc {input.rawReads} --threads {threads} -o {params.path}
-        """
+        "fastqc {input.raw_reads} -o results/qc"
 
-rule trimmomaticd:
+rule trim_reads:
     input:
-        read1="rawReads/{ids}_1.fastq.gz",
-        read2="rawReads/{ids}_2.fastq.gz"
-    output: 
-        forwardpaired="trimmedReads/{ids}_1P.fastq",
-        reversepaired="trimmedReads/{ids}_2P.fastq"
-    threads: 4
-    params:
-        basename="trimmedReads/{ids}.fastq",
-        log="trimmedReads/{ids}.log"
-    shell: 
-        """
-        trimmomatic PE -threads {threads} {input.read1} {input.read2} \
-        {output.forwardpaired} {output.reversepaired} \
-        ILLUMINACLIP:/path/to/adapters/TruSeq3-PE-2.fa:2:30:10 \
-        LEADING:3 TRAILING:3 SLIDINGWINDOW:4:15 MINLEN:36 > {params.log} 2>&1
-        """
-
-rule cutadapter:
-    input:
-        read1="rawReads/{ids}_1.fastq.gz",
-        read2="rawReads/{ids}_2.fastq.gz"
+        raw_reads = os.path.join(RAW_READS, "{sample}.fq.gz")
     output:
-        forwardpaired="trimmedReads/{ids}_1P.fastq",
-        reversepaired="trimmedReads/{ids}_2P.fastq"
-    threads: 4
-    params:
-        basename="trimmedReads/{ids}.fastq",
-        log="trimmedReads/{ids}.log"
-    shell: 
-        """
-        cutadapt -a AGATCGGAAGAGCACACGTCTGAACTCCAGTCAC \
-        -A AGATCGGAAGAGCGTCGTGTAGGGAAAGAGTGT \
-        -o {output.forwardpaired} -p {output.reversepaired} {input.read1} {input.read2} \
-        > {params.log} 2>&1
-        """
+        trimmed_reads = os.path.join(TRIMMED_READS, "{sample}_trimmed.fq.gz")
+    shell:
+        "trimmomatic SE {input.raw_reads} {output.trimmed_reads}"
+
+rule dada2_denoise:
+    input:
+        trimmed_reads = os.path.join(TRIMMED_READS, "{sample}_trimmed.fq.gz")
+    output:
+        denoised_table = os.path.join(DENOISED_READS, "{sample}_table.qza")
+    shell:
+        "qiime dada2 denoise-single --i-demultiplexed-seqs {input.trimmed_reads} --o-table {output.denoised_table}"
+
+rule assign_taxonomy:
+    input:
+        denoised_table = os.path.join(DENOISED_READS, "{sample}_table.qza")
+    output:
+        taxonomy = os.path.join(TAXONOMY, "{sample}_taxonomy.qza"),
+        taxonomy_tsv = os.path.join("results", "taxonomy_{sample}.tsv")
+    shell:
+        "qiime feature-classifier classify-sklearn --i-classifier classifier.qza --i-reads {input.denoised_table} --o-classification {output.taxonomy}"
+
+rule export_taxonomy:
+    input:
+        taxonomy = os.path.join(TAXONOMY, "{sample}_taxonomy.qza")
+    output:
+        taxonomy_tsv = "results/taxonomy_{sample}.tsv"
+    shell:
+        "qiime tools export --input-path {input.taxonomy} --output-path results && mv results/taxonomy.tsv {output.taxonomy_tsv}"
+
+
+
+# /// script
+# requires-python = ">=3.12"
+# dependencies = [
+#     "glob",
+#     "glob-wildcards",
+#     "globe",
+#     "os",
+#     "snakemake",
+# ]
+# ///
+
+import os
+from snakemake.io import glob_wildcards
+
+# Define input data directory
+RAW_READS = "data/raw_reads"
+
+# Automatically find all sample names that match the pattern
+SAMPLES, = glob_wildcards(os.path.join(RAW_READS, "SRR55274*_R1.fq.gz"))
+
+rule all:
+    input:
+        expand("results/qc/{sample}_fastqc.html", sample=SAMPLES)
+
+rule fastqc:
+    input:
+        raw_reads = os.path.join(RAW_READS, "{sample}_R1.fq.gz")
+    output:
+        qc_report = os.path.join("results/qc", "{sample}_fastqc.html")
+    shell:
+        "fastqc {input.raw_reads} -o results/qc"
+        
+        
+        
+        
+        
+        
+        
+        
+# /// script
+# requires-python = ">=3.12"
+# dependencies = [
+#     "glob",
+#     "glob-wildcards",
+#     "os",
+#     "snakemake",
+# ]
+# ///
+
+import os
+from snakemake.io import glob_wildcards
+
+# Define input data directory
+RAW_READS = "data/raw_reads"
+
+# Use glob_wildcards to extract sample names from the raw reads
+SAMPLES, = glob_wildcards(os.path.join(RAW_READS, "SRR55274*_R1.fq.gz"))
+
+rule all:
+    input:
+        expand("results/qc/{sample}_fastqc.html", sample=SAMPLES)
+
+rule fastqc:
+    input:
+        raw_reads = os.path.join(RAW_READS, "{sample}_R1.fq.gz")
+    output:
+        qc_report = os.path.join("results/qc", "{sample}_fastqc.html")
+    shell:
+        "fastqc {input.raw_reads} -o results/qc"
+
+#create a sample table like this one. You can use the script prepare_sample_table.py for it. 
+# The scripts searches for fastq(.gz) files inside a folder (structure). If you have paired end files they should have R1/R2 somewhere in the filename. If might be a good idea to simplify sample names.
+
+```
+
+./prepare_sample_table.py path/to/fastq(.gz)files
+
+```
