@@ -1,0 +1,9 @@
+uv tool install transformers huggingface_hub
+
+from transformers import AutoModel, AutoTokenizer
+
+model_name = "LLaMA-13B"  # Change to your preferred model
+model = AutoModel.from_pretrained(model_name)
+tokenizer = AutoTokenizer.from_pretrained(model_name)
+
+print("Model and tokenizer downloaded successfully!")
