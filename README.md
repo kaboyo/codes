@@ -9,7 +9,7 @@ ssh xxxxx@xxxxxxx
 
 **#interactive runs on work station:**
 ```
-sinteractive --partition=highmem --cpus-per-task=20 --mem=8000 --time=01:03:04
+sinteractive --partition=highmem --cpus-per-task=20 --mem=8000 --time=24:03:04
 ```
 
 
@@ -64,6 +64,7 @@ git clone https://github.com/aomlomics/tourmaline.git
 *#The test data (16 samples of paired-end 16S rRNA data with 1000 sequences per sample) comes with your cloned copy of #Tourmaline. It's fast to run and will verify that you can run the workflow.*
 
 **#Download reference database sequence and taxonomy files, named refseqs.qza and reftax.qza (QIIME 2 archives), in 01-imported:********************************
+
 *#make sure the folder named imported is in the tourmarine directory*
 
 
@@ -86,6 +87,7 @@ cat manifest_pe.csv | grep -v "reverse" > manifest_se.csv
 
 **#Prepare the sequence reads (manifest file)********************************
 ################################################################
+
 #code to organise the reads into a manifest file (SE reads)
 ```
 #!/usr/bin/env python
@@ -309,7 +311,7 @@ snakemake --use-conda dada2_pe_taxonomy_unfiltered --cores 4 --printshellcmds
 *#Next, run the diversity rule (for unfiltered data):*
 
 ```
-snakemake --use-conda dada2_pe_diversity_unfiltered --cores 4 --printshellcmds
+snakemake --use-conda dada2_pe_diversity_unfiltered --cores 6 --printshellcmds
 ```
 
 #Finally, run the report rule (for unfiltered data):
@@ -341,3 +343,56 @@ snakemake --use-conda dada2_pe_taxonomy_filtered --cores 4  --printshellcmds
 ```
 
 **##From the tourmaline directory (which you may rename), run Snakemake with the denoise rule as the target, changing the number of cores to match your machine:*******************************
+
+cat manifest_pe.csv | sed 's|/data/tourmaline|/scratch/eo2r24/SNAKEMAKE/tourmaline|' > temp && mv temp manifest_pe.csv 
+cat manifest_pe.csv | grep -v "reverse" > manifest_se.csv
+
+#install deicode
+```
+pip install git+https://github.com/biocore/DEICODE.git
+
+or
+pip install deicode
+```
+
+
+**#install msa library in the qiime environment*
+
+```
+conda activate qiime2-2023.5
+```
+*#Install the msa Package in R*
+*#Once inside your environment, open R:*
+
+```
+#call R
+R
+```
+
+*#Then install msa:*
+
+```
+install.packages("BiocManager")
+BiocManager::install("msa")
+q()
+```
+
+#3. Verify Installation
+```
+library(msa)
+
+#If no error appears, the package is installed correctly.
+```
+
+#install odseq
+```
+install.packages("devtools")  # If not installed
+devtools::install_github("collaborative-omics/odseq")
+q()
+
+or 
+conda install -c conda-forge -c bioconda r-odseq
+```
+```
+conda install -n qiime2-2023.5 -c conda-forge r-odseq
+```con

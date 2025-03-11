@@ -274,7 +274,6 @@ uvx --with jupyter,numpy,bqplot voila bqplot.ipynb
 
 
 
-
 #uv manages project dependencies and environments, with support for lockfiles, workspaces, and more, similar to rye or poetry:
 
 ```
@@ -320,7 +319,10 @@ uv init SCRIPTS
 uv run example.py
 
 ```
-
+import fire
+import torch
+import tqdm
+import transformers
 #Tools
 #uv executes and installs command-line tools provided by Python packages, similar to pipx.
 #Run a tool in an ephemeral environment using uvx (an alias for uv tool run):
@@ -423,5 +425,119 @@ to check on Click: https://click.palletsprojects.com/en/stable/
 to check on Cookiecutter: https://cookiecutter.readthedocs.io/en/stable/
 panExplorer_workflow: https://github.com/SouthGreenPlatform/PanExplorer_workflow 
 
+```
 #install uv with pip
 pip install uv
+``````
+UV command here
+################################################################
+
+
+
+################################################################
+#Install package and load the extension
+#Open the collab on terminal
+#https://github.com/InfuseAI/colab-xterm
+```
+!pip install colab-xterm
+%load_ext colabxterm
+```
+
+#on a terminal
+```
+%xterm
+```
+
+#options
+```
+ %xterm height=1000 port=10001
+```
+ #go to ssh directory
+ cd ~/.ssh/
+ ls -l ~/.ssh/
+ ################################################################
+ 
+ 
+ ###
+ #Surviving Bioinformatics
+ #introduction to unix
+ 
+ https://sandbox.bio/tutorials
+ 
+ 
+################################################################
+call: module load tmux
+#Using tmux on an HPC (High-Performance Computing) Cluster
+#tmux (Terminal Multiplexer) is useful for running long jobs on an HPC, allowing you to disconnect 
+# and reconnect without losing progress.
+
+#1️⃣ Start a tmux Session
+#Log in to the HPC and type:
+```
+tmux new -s arthrobacter_session
+#✅ This starts a new session named my_session.
+```
+
+#2️⃣ Detach from the Session (Keep Job Running)
+```
+Ctrl + B, then D
+✅ This detaches the session but keeps it running in the background.
+```
+
+#3️⃣ Reconnect to a Running Session
+#To list active sessions:
+```
+tmux ls
+```
+
+#Then, reconnect:
+```
+tmux attach -t my_session
+```
+
+#4️⃣ Kill or Exit a tmux Session
+#When done, exit the session:
+
+```
+tmux kill-session -t my_session
+```
+
+#5️⃣ Split Windows Inside tmux
+#You can split your terminal inside a tmux session:
+```
+Horizontal Split: Ctrl + B, then %
+Vertical Split: Ctrl + B, then "
+```
+
+
+#To switch between panes:
+
+```
+
+Ctrl + B, then Arrow keys
+```
+
+#6️⃣ Save and Restore tmux Sessions (Optional)
+#To save the session layout:
+
+```
+tmux list-windows -t my_session > session_layout.txt
+```
+#To restore the session later:
+
+```
+tmux source-file session_layout.txt
+```
+##Why Use tmux on HPC?
+#✅ Prevents job loss if SSH disconnects
+#✅ Allows running multiple tasks in one session
+#✅ Makes long computations more manageable
+
+
+
+
+
+
+
+
+########################################################################

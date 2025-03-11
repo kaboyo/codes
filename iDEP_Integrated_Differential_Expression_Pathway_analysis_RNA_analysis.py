@@ -136,3 +136,6 @@ sudo docker stop idep
 sudo docker rm idep
 After stopping it, you can restart it by repeating Step 2, which also pulls the latest iDEP image from DockerHub. We update it frequently, make sure you upgrade your image at least on a monthly basis.
 
+
+
+https://github.com/statdivlab/radEmu: radEmu is an R package for estimating changes in the abundance of microbial taxa using amplicon or shotgun sequencing technologies.
